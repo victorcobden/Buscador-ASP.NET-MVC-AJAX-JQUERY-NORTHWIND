@@ -1,0 +1,46 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2 class="center red-text text-accent-4">Productos</h2>
+<nav class="row">
+    <div class="nav-wrapper">
+            <div class="input-field red accent-4">
+                <input id="txtAjax" type="search" required>
+                <label for="search"><i class="material-icons">search</i></label>
+                <i class="material-icons">close</i>
+            </div>
+    </div>
+</nav>
+
+<div class="row">
+    <div class="col s12" style="height: 200px; overflow: scroll;">
+        <ul class="collection" id="productos"></ul>
+    </div>
+</div>
+
+<script>
+        $("#txtAjax").keydown(function () {
+            var paramAjax = $("#txtAjax").val();
+            $("#productos").empty();
+            $.ajax({
+                url: '@Url.Action( "Listar" )',
+                type: 'GET',
+                async: false,
+                data: { parametro: $("#txtAjax").val() },
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                error: function () {
+                    console.log("Server access failure!");
+                },
+                success: function (result) {
+                    $.each(result, function (ProductID, ProductName, UnitPrice, UnitsInStock) {
+                        $("#productos").append("<li class='collection-item avatar'>" + "<i class='material-icons circle red accent-4'>folder</i>" + "<span class='title'>" + result[ProductID].ProductName + "</span>" + "<p>Precio: s/." + result[ProductID].UnitPrice + "</br>Stock: " + result[ProductID].UnitsInStock + "</p>" + "<a href='#!' class='secondary-content'><i class='material-icons red-text text-accent-4'>add_shopping_cart</i></a>" + "</li>");
+                    });
+                }
+            });
+
+        });
+
+</script>
